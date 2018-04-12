@@ -16,6 +16,7 @@ class Intake {
             this.Container = container;
 
         this.Container.classList.add('Intake-Container');
+        this.Container.setAttribute('tabindex', -1);
 
         if (typeof form === 'string')
             this.Form = document.querySelector(form);
@@ -32,9 +33,14 @@ class Intake {
 
         this.Options = options;
 
-        if (options instanceof DateIntakeOptions) {
+        if (options instanceof DateIntakeOptions)
             this.BaseIntake = new DateIntake(this, existingValue);
-        }
+        else if (options instanceof PhoneIntakeOptions)
+            this.BaseIntake = new PhoneIntake(this, existingValue);
+        else if (options instanceof ZipCodeIntakeOptions)
+            this.BaseIntake = new ZipCodeIntake(this, existingValue);
+        else
+            throw 'Unrecognized options provided';
     }
 
 }
@@ -43,12 +49,39 @@ class DateIntakeOptions {
 
     /**
      * 
-     * @param {String} format 
-     * @param {String} divider 
+     * @param {String} format The format the date should be constructed in. Should be similar to 'MM/DD/YYYY'. The text in the format will be used as the placeholder text.
+     * @param {String} divider The text to be used to divide the 3 parts of the date.
      */
     constructor(format, divider) {
         this.Format = format;
         this.Divider = divider;
+    }
+}
+
+class PhoneIntakeOptions {
+    /**
+     * 
+     * @param {'(XXX)XXX-XXXX' | 'XXX-XXX-XXXX'} format Format phone should take.
+     * @param {String} placeHolderCharacter Optional. The character to use as the placeholder. Defaults to ' '.
+     */
+    constructor(format, placeHolderCharacter = ' ') {
+        this.Format = format;
+        this.PlaceHolderCharacter = placeHolderCharacter.substr(0, 1);
+    }
+}
+
+class ZipCodeIntakeOptions {
+
+    /**
+     * 
+     * @param {'USA' | 'Canada'} country The country the postal code input is for.
+     * @param {Boolean} isNumeric Optional. If you wish to not provide country you should provide this value to specify if the input should only accept numbers.
+     * @param {Number} maxLength Optional. If you wish to not provide country you should provide this value to specify the maximum length the input should accept.
+     */
+    constructor(country = null, isNumeric = null, maxLength = null) {
+        this.Country = country;
+        this.IsNumeric = isNumeric;
+        this.MaxLength = maxLength;
     }
 }
 
@@ -78,11 +111,20 @@ class IntakeBase {
 
         this.GenerateBtnClear();
 
+        var _this = this;
+
         if (this.BtnClear)
-            this.BtnClear.onclick = this.Clear();
+            this.BtnClear.onclick = function () {
+                _this.Clear();
+            }
 
         if (this.Form)
-            this.Form.onsubmit = this.UpdateHiddenInput();
+            this.Form.onsubmit = function () {
+                if (_this.UpdateHiddenInputWithFormattedValue)
+                    _this.UpdateHiddenInputWithFormattedValue();
+                else
+                    _this.UpdateHiddenInputWithRawValue();
+            }
     }
 
     GeneratePartGroup() {
@@ -103,9 +145,9 @@ class IntakeBase {
     }
 
     Clear() {
-        this.IntakeParts.forEach(element => {
-            if (element instanceof IntakeInput)
-                element.Clear();
+        this.IntakeParts.forEach(part => {
+            if (part instanceof IntakeInput)
+                part.Clear();
         });
     }
 
@@ -153,8 +195,6 @@ class DateIntake extends IntakeBase {
      * 
      * @param {Intake} parent The parent of this object. Usually an instance of Intake.
      * @param {*} existingValue The value to set the input to by default.
-     * @param {String} format The format the date should be constructed in. Should be similar to 'MM/DD/YYYY'. The text in the format will be used as the placeholder text.
-     * @param {String} divider The text to be used to divide the 3 parts of the date.
      */
     constructor(parent, existingValue) {
         super(parent, existingValue);
@@ -164,17 +204,23 @@ class DateIntake extends IntakeBase {
         var divider = this.Parent.Options.Divider;
         var parts = this.Parent.Options.Format.split(divider);
 
-        var eventsToPrevent = ['paste', 'mousedown'];
+        var eventsToPrevent = ['paste'];
 
-        this.IntakeParts.push(new DateIntakeInput(this, parts[0], eventsToPrevent));
+        this.IntakeParts.push(new NumberIntakeInput(this, parts[0], eventsToPrevent));
         this.IntakeParts.push(new IntakeDivider(this, divider));
-        this.IntakeParts.push(new DateIntakeInput(this, parts[1], eventsToPrevent));
+        this.IntakeParts.push(new NumberIntakeInput(this, parts[1], eventsToPrevent));
         this.IntakeParts.push(new IntakeDivider(this, divider));
-        this.IntakeParts.push(new DateIntakeInput(this, parts[2], eventsToPrevent));
+        this.IntakeParts.push(new NumberIntakeInput(this, parts[2], eventsToPrevent));
 
         this.IntakeParts.forEach(intakePart => {
             this.PartGroup.appendChild(intakePart.Element);
+            intakePart.Element.style.textAlign = 'center';
         });
+
+        this.IntakeParts[0].NextPart = this.IntakeParts[2];
+        this.IntakeParts[2].NextPart = this.IntakeParts[4];
+        this.IntakeParts[2].PreviousPart = this.IntakeParts[0];
+        this.IntakeParts[4].PreviousPart = this.IntakeParts[2];
     }
 
     /**
@@ -214,6 +260,128 @@ class DateIntake extends IntakeBase {
         }
 
         return '';
+    }
+}
+
+class PhoneIntake extends IntakeBase {
+
+    /**
+     * 
+     * @param {Intake} parent The parent of this object. Usually an instance of Intake.
+     * @param {*} existingValue The value to set the input to by default. Should be unformatted, similar to 0123456789.
+     */
+    constructor(parent, existingValue) {
+        super(parent, existingValue);
+    }
+
+    GenerateIntakeParts() {
+
+        var eventsToPrevent = ['paste'];
+
+        var placeHolderChar = this.Parent.Options.PlaceHolderCharacter;
+
+        if (this.Parent.Options.Format === '(XXX)XXX-XXXX') {
+            this.IntakeParts.push(new IntakeDivider(this, '('));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolderChar.repeat(3), eventsToPrevent));
+            this.IntakeParts.push(new IntakeDivider(this, ')'));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolderChar.repeat(3), eventsToPrevent));
+            this.IntakeParts.push(new IntakeDivider(this, '-'));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolderChar.repeat(4), eventsToPrevent));
+
+
+            this.IntakeParts[1].NextPart = this.IntakeParts[3];
+            this.IntakeParts[3].NextPart = this.IntakeParts[5];
+            this.IntakeParts[3].PreviousPart = this.IntakeParts[1];
+            this.IntakeParts[5].PreviousPart = this.IntakeParts[3];
+
+        } else if (this.Parent.Options.Format === 'XXX-XXX-XXX') {
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolderChar.repeat(3), eventsToPrevent));
+            this.IntakeParts.push(new IntakeDivider(this, '-'));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolderChar.repeat(3), eventsToPrevent));
+            this.IntakeParts.push(new IntakeDivider(this, '-'));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolderChar.repeat(4), eventsToPrevent));
+
+            this.IntakeParts[0].NextPart = this.IntakeParts[2];
+            this.IntakeParts[2].NextPart = this.IntakeParts[4];
+            this.IntakeParts[2].PreviousPart = this.IntakeParts[0];
+            this.IntakeParts[4].PreviousPart = this.IntakeParts[2];
+        } else {
+            throw 'Invalid format provided with PhoneIntakeOptions.'
+        }
+
+        this.IntakeParts.forEach(intakePart => {
+            this.PartGroup.appendChild(intakePart.Element);
+            intakePart.Element.style.textAlign = 'center';
+        });
+    }
+
+    /**
+     * 
+     * @param {String} value Raw value with no formatted. Should be similar to 0123456789 
+     */
+    PopulateFromExistingValue(value) {
+        this.IntakeParts[1].Element.value = value.substr(0, 3);
+        this.IntakeParts[3].Element.value = value.substr(3, 3);
+        this.IntakeParts[5].Element.value = value.substr(6, 4);
+    }
+}
+
+class ZipCodeIntake extends IntakeBase {
+
+    /**
+     * 
+     * @param {Intake} parent The parent of this object. Usually an instance of Intake.
+     * @param {*} existingValue The value to set the input to by default. Should be unformatted, similar to 0123456789.
+     */
+    constructor(parent, existingValue) {
+        super(parent, existingValue);
+
+        var _this = this;
+        this.Parent.Container.onclick = function(){
+            _this.IntakeParts[0].Element.focus();
+        }
+    }
+
+    GenerateIntakeParts() {
+
+        var eventsToPrevent = ['paste'];
+
+        var intakePart;
+
+        if (this.Parent.Options.Country) {
+            switch (this.Parent.Options.Country) {
+                case 'USA':
+                    intakePart = new NumberIntakeInput(this, '     ', eventsToPrevent);
+                    break;
+                case 'Canada':
+                    intakePart = new TextIntakeInput(this, '      ', eventsToPrevent);
+                    break;
+                default:
+                    throw 'Unrecognized Country Provided for ZipCodeIntakeOptions';
+            }
+        } else if (!this.Parent.Options.MaxLength) {
+            throw 'MaxLength must be provided when Country is ommitted from ZipCodeIntakeOptions';
+        } else {
+            if (this.Parent.Options.IsNumeric)
+                intakePart = new NumberIntakeInput(this, ' '.repeat(this.Parent.Options.MaxLength), eventsToPrevent);
+            else
+                intakePart = new TextIntakeInput(this, ' '.repeat(this.Parent.Options.MaxLength), eventsToPrevent);
+        }
+
+        this.IntakeParts.push(intakePart);
+
+        this.IntakeParts.forEach(intakePart => {
+            this.PartGroup.appendChild(intakePart.Element);
+        });
+    }
+
+    /**
+     * 
+     * @param {String} value Raw value with no formatted. Should be similar to 0123456789 
+     */
+    PopulateFromExistingValue(value) {
+        this.IntakeParts[0].Element.value = value;
+        this.IntakeParts[0].TrimToMaxLength();
     }
 }
 
@@ -300,6 +468,10 @@ class IntakeInput extends IntakePartBase {
         this.Element.onfocus = function () {
             _this.JustGainedFocus = true;
         };
+
+        this.Element.onblur = function () {
+            _this.TrimToMaxLength();
+        }
     }
 
     PreventDefault(event) {
@@ -309,7 +481,7 @@ class IntakeInput extends IntakePartBase {
     KeyTypeFromEvent(event) {
         var keyCode = event.which || event.keyCode;
 
-        if (event.shiftKey) {
+        if (!event.shiftKey) {
             if (keyCode == 8)
                 return "Backspace";
             else if (keyCode == 9)
@@ -337,19 +509,21 @@ class IntakeInput extends IntakePartBase {
     }
 
     GoToPrevious() {
-        throw "Not Implemented";
-
-        // this.PreviousPhonePart.focus();
+        if (this.PreviousPart && this.PreviousPart.Element)
+            this.PreviousPart.Element.focus();
     }
 
     GoToNext() {
-        throw "Not Implemented";
-
-        // this.NextPhonePart.focus();
+        if (this.NextPart && this.NextPart.Element)
+            this.NextPart.Element.focus();
     }
 
     IsEmpty() {
         return !this.Element.value || this.Element.value == '';
+    }
+
+    IsAtBegginingOfInput() {
+        return this.Element.selectionEnd == 0;
     }
 
     IsAtEndOfInput() {
@@ -376,11 +550,16 @@ class IntakeInput extends IntakePartBase {
 
     KeyUp(event) {
         this.TrimToMaxLength();
-        this.Parent.UpdateHiddenInput();
+
+
+        if (this.Parent.UpdateHiddenInputWithFormattedValue)
+            this.Parent.UpdateHiddenInputWithFormattedValue();
+        else
+            this.Parent.UpdateHiddenInputWithRawValue();
     }
 }
 
-class DateIntakeInput extends IntakeInput {
+class NumberIntakeInput extends IntakeInput {
 
     /**
      * @param {IntakeBase} parent The parent object of this divider. Usually an object that extends IntakeBase.
@@ -397,7 +576,7 @@ class DateIntakeInput extends IntakeInput {
         switch (this.KeyTypeFromEvent(event)) {
 
             case "Shift+Tab":
-                if (this.PreviousPhonePartSelector) {
+                if (this.PreviousPart) {
                     this.GoToPrevious();
                     event.preventDefault();
                 }
@@ -409,21 +588,21 @@ class DateIntakeInput extends IntakeInput {
                 break;
 
             case "Tab":
-                if (this.NextPhonePartSelector) {
+                if (this.NextPart) {
                     this.GoToNext();
                     event.preventDefault();
                 }
                 break;
 
             case "LeftArrow":
-                if (this.PreviousPhonePartSelector && this.IsEmpty()) {
+                if (this.PreviousPart && (this.IsEmpty() || this.IsAtBegginingOfInput())) {
                     this.GoToPrevious();
                     event.preventDefault();
                 }
                 break;
 
             case "RightArrow":
-                if (this.NextPhonePartSelector && (this.IsEmpty() || this.IsAtEndOfInput())) {
+                if (this.NextPart && (this.IsEmpty() || this.IsAtEndOfInput())) {
                     this.GoToNext();
                     event.preventDefault();
                 }
@@ -461,8 +640,97 @@ class DateIntakeInput extends IntakeInput {
                 //We must trust that since we are using an input type of 'Number' that the user only had the option to input numerics.
             case "Android":
             case "Number":
-                if (this.IsComplete() && !this.JustGainedFocus) {
-                    if (this.NextPhonePartSelector)
+                if (this.IsComplete()) {
+
+                    if (!this.JustGainedFocus)
+                        this.GoToNext();
+
+                    event.preventDefault();
+                }
+        }
+
+        super.KeyUp(event);
+    }
+}
+
+class TextIntakeInput extends IntakeInput {
+
+    /**
+     * @param {IntakeBase} parent The parent object of this divider. Usually an object that extends IntakeBase.
+     * @param {String} placeHolder The text to set the PlaceHolder of the created input to.
+     * @param {Array<string>} eventsToPrevent A string array of event names that will be have event listeners added to prevent default behavior.
+     */
+    constructor(parent, placeHolder, eventsToPrevent) {
+        super(parent, placeHolder, eventsToPrevent, 'text', null);
+    }
+
+    KeyDown(event) {
+        super.KeyDown(event);
+
+        switch (this.KeyTypeFromEvent(event)) {
+
+            case "Shift+Tab":
+                if (this.PreviousPart) {
+                    this.GoToPrevious();
+                    event.preventDefault();
+                }
+                break;
+
+            case "UpArrow":
+            case "DownArrow":
+                event.preventDefault();
+                break;
+
+            case "Tab":
+                if (this.NextPart) {
+                    this.GoToNext();
+                    event.preventDefault();
+                }
+                break;
+
+            case "LeftArrow":
+                if (this.PreviousPart && (this.IsEmpty() || this.IsAtBegginingOfInput())) {
+                    this.GoToPrevious();
+                    event.preventDefault();
+                }
+                break;
+
+            case "RightArrow":
+                if (this.NextPart && (this.IsEmpty() || this.IsAtEndOfInput())) {
+                    this.GoToNext();
+                    event.preventDefault();
+                }
+                break;
+
+            case "Delete":
+                break;
+
+            case "Backspace":
+                if (this.IsEmpty())
+                    this.GoToPrevious();
+                break;
+
+            default:
+                if (this.IsComplete())
+                    event.preventDefault();
+                break;
+        }
+    }
+
+    KeyUp(event) {
+        switch (this.KeyTypeFromEvent(event)) {
+            case "Shift+Tab":
+            case "LeftArrow":
+            case "Tab":
+            case "RightArrow":
+            case "Backspace":
+                break;
+
+                /* Confirm input is complete and if so and they didn't just get here move them to the next input after enforcing the max length */
+            default:
+                if (this.IsComplete()) {
+
+                    if (!this.JustGainedFocus)
                         this.GoToNext();
 
                     event.preventDefault();

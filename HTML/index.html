@@ -13,30 +13,33 @@
     <script src="../JS/Intake.js"></script>
 </head>
 
-<body>
+<body style="padding: 20px;">
     <form method="POST">
-        <div id="DateOfBirth"></div>
-    </form>
 
-    <!-- <form method="POST" class="js-pi-form">
-            <div class="css-pi-Container" id="js-pi-PhoneNumber">
-                <div class="css-pi-PhonePartGroup">
-                    <p>(</p>
-                    <input type="number" name="AreaCode" id="js-pi-AreaCode" class="css-pi-PhonePart css-pi-AreaCode" />
-                    <p>)</p>
-                    <input type="number" name="Prefix" id="js-pi-Prefix" class="css-pi-PhonePart css-pi-Prefix" />
-                    <p>-</p>
-                    <input type="number" name="Suffix" id="js-pi-Suffix" class="css-pi-PhonePart css-pi-Suffix" />
-                </div>
-                <i class="fas fa-times-circle css-pi-ClearBtn" id="js-pi-ClearBtn"></i>
-            </div>
-            <input type="hidden" name="PhoneNumber" class="js-pi-HiddenInput" />
-        </form> -->
+        <label for="DateOfBirth">Date Of Birth:</label> <br/> <br/>
+        <div id="Custom-DateOfBirth"></div>
+        <input type="hidden" id="DateOfBirth" name="DateOfBirth"/> <br/> <br/>
+
+        <label for="Phone">Phone:</label> <br/> <br/>
+        <div id="Custom-Phone"></div>
+        <input type="hidden" id="Phone" name="Phone"/> <br/> <br/>
+
+        <label for="USPostalCode">US Postal Code:</label> <br/> <br/>
+        <div id="Custom-USPostalCode"></div>
+        <input type="hidden" id="PostalCode" name="PostalCode"/> <br/> <br/>
+
+        <label for="CanadaPostalCode">Phone:</label> <br/> <br/>
+        <div id="Custom-CanadaPostalCode"></div>
+        <input type="hidden" id="CanadaPostalCode" name="CanadaPostalCode"/> <br/> <br/>
+    </form>
 </body>
 
 <script>
     document.addEventListener("DOMContentLoaded", function (event) {
-        var dateOfBirth = new Intake('#DateOfBirth', 'form', '', null, new DateIntakeOptions('MM/DD/YYYY', '/'));
+        var dateOfBirth = new Intake('#Custom-DateOfBirth', 'form', '', '#DateOfBirth', new DateIntakeOptions('MM/DD/YYYY', '/'));
+        var phone = new Intake('#Custom-Phone', 'form', '', '#Phone', new PhoneIntakeOptions('(XXX)XXX-XXXX'));
+        var usPostalCode = new Intake('#Custom-USPostalCode', 'form', '', '#USPostalCode', new ZipCodeIntakeOptions('USA'));
+        var canadaPostalCode = new Intake('#Custom-CanadaPostalCode', 'form', '', '#CanadaPostalCode', new ZipCodeIntakeOptions('Canada'));
     });
 </script>
 
