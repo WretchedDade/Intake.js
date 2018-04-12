@@ -1,0 +1,37 @@
+.Intake-Container {
+	align-items: center;
+	border: 1px solid #cccccc;
+	display: flex;
+	justify-content: space-between;
+    min-width: 190px;
+}
+
+.Intake-PartGroup {
+	display: flex;
+	padding: 4px;
+	min-width: 100px;
+}
+
+.Intake-Part {	
+	border: none;
+	margin: 0;
+	outline: none;
+
+	-moz-appearance: textfield;
+}
+
+p.Intake-Part {	
+    text-align: center;
+}
+
+.Intake-Part::-webkit-outer-spin-button,
+.Intake-Part::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.Intake-BtnClear {
+	color: #cccccc;
+	cursor: pointer;
+	font-size: .9em;
+	padding-right: 4px;
+}

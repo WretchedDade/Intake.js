@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Intake.JS</title>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css" />
+    <link rel="stylesheet" href="../CSS/Intake.css"/>
+
+    <script src="../JS/Intake.js"></script>
+</head>
+
+<body>
+    <form method="POST">
+        <div id="DateOfBirth"></div>
+    </form>
+
+    <!-- <form method="POST" class="js-pi-form">
+            <div class="css-pi-Container" id="js-pi-PhoneNumber">
+                <div class="css-pi-PhonePartGroup">
+                    <p>(</p>
+                    <input type="number" name="AreaCode" id="js-pi-AreaCode" class="css-pi-PhonePart css-pi-AreaCode" />
+                    <p>)</p>
+                    <input type="number" name="Prefix" id="js-pi-Prefix" class="css-pi-PhonePart css-pi-Prefix" />
+                    <p>-</p>
+                    <input type="number" name="Suffix" id="js-pi-Suffix" class="css-pi-PhonePart css-pi-Suffix" />
+                </div>
+                <i class="fas fa-times-circle css-pi-ClearBtn" id="js-pi-ClearBtn"></i>
+            </div>
+            <input type="hidden" name="PhoneNumber" class="js-pi-HiddenInput" />
+        </form> -->
+</body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function (event) {
+        var dateOfBirth = new Intake('#DateOfBirth', 'form', '', null, new DateIntakeOptions('MM/DD/YYYY', '/'));
+    });
+</script>
+
+</html>
