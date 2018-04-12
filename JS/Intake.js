@@ -1,12 +1,18 @@
+/**
+ * Author: Dade Cook
+ * Codepen Demo: https://codepen.io/WretchedDade/pen/aYxXZb
+ * GitHub Repository: https://github.com/WretchedDade/Intake.js
+ */
+
 class Intake {
 
     /**
      * 
-     * @param {String | HTMLElement} container
-     * @param {String | HTMLElement} form
-     * @param {String | HtmlElement} hiddenInput
-     * @param {*} existingValue
-     * @param {DateOptions} options
+     * @param {String | HTMLElement} container The element (or selector for it) that should contain the generated input elements.
+     * @param {String | HTMLElement} form The form (or selector for it) that contains the container.
+     * @param {String | HtmlElement} hiddenInput The element (or selector for it) that should have it's value updated.
+     * @param {*} existingValue The existing value to populate the input with
+     * @param {DateIntakeOptions | PhoneIntake | ZipCodeIntake} options Options used for generating the input. Type of options defines what time of input will be created.
      */
     constructor(container, form, existingValue, hiddenInput, options) {
 
@@ -118,13 +124,20 @@ class IntakeBase {
                 _this.Clear();
             }
 
-        if (this.Form)
-            this.Form.onsubmit = function () {
+        if (this.Parent.Form)
+            this.Parent.Form.onsubmit = function () {
                 if (_this.UpdateHiddenInputWithFormattedValue)
                     _this.UpdateHiddenInputWithFormattedValue();
                 else
                     _this.UpdateHiddenInputWithRawValue();
             }
+        
+        this.Parent.Container.onblur = function(){
+            _this.IntakeParts.forEach(intakePart => {
+                if(intakePart instanceof IntakeInput)
+                    intakePart.TrimToMaxLength();
+            });
+        }
     }
 
     GeneratePartGroup() {
