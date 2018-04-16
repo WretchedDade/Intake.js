@@ -165,9 +165,9 @@ class IntakeBase {
     }
 
     UpdateHiddenInputWithRawValue() {
-        if (this.HiddenInput) {
-            this.HiddenInput.value = this.GetRawValue();
-            this.FireChangeEvent(this.HiddenInput);
+        if (this.Parent.HiddenInput) {
+            this.Parent.HiddenInput.value = this.GetRawValue();
+            this.FireChangeEvent(this.Parent.HiddenInput);
         }
     }
 
@@ -193,9 +193,9 @@ class IntakeBase {
 
         var value = '';
 
-        this.IntakeParts.forEach(element => {
-            if (element instanceof BaseIntakePart)
-                value += element.value;
+        this.IntakeParts.forEach(intakePart => {
+            if (intakePart instanceof IntakeInput)
+                value += intakePart.Element.value;
         });
 
         return value;
@@ -224,6 +224,8 @@ class DateIntake extends IntakeBase {
         this.IntakeParts.push(new NumberIntakeInput(this, parts[1], eventsToPrevent));
         this.IntakeParts.push(new IntakeDivider(this, divider));
         this.IntakeParts.push(new NumberIntakeInput(this, parts[2], eventsToPrevent));
+        
+        this.IntakeParts[0].Element.style.marginLeft = "2px";
 
         this.IntakeParts.forEach(intakePart => {
             this.PartGroup.appendChild(intakePart.Element);
@@ -249,27 +251,27 @@ class DateIntake extends IntakeBase {
     }
 
     UpdateHiddenInputWithFormattedValue() {
-        if (this.HiddenInput) {
-            this.HiddenInput.value = this.GetValue();
-            this.FireChangeEvent(this.HiddenInput);
+        if (this.Parent.HiddenInput) {
+            this.Parent.HiddenInput.value = this.GetFormattedValue();
+            this.FireChangeEvent(this.Parent.HiddenInput);
         }
     }
 
     GetFormattedValue() {
 
-        var inputs = [];
-        var allComplete = false;
+        var values = [];
+        var allComplete = true;
 
         this.IntakeParts.forEach(intakePart => {
             if (intakePart instanceof IntakeInput) {
-                inputs.push(intakePart);
+                values.push(intakePart.Element.value);
                 allComplete = allComplete && intakePart.IsComplete();
             }
         });
 
         if (allComplete) {
             var divider = this.Parent.Options.Divider;
-            return inputs[0] + divider + inputs[1] + divider + inputs[2];
+            return values[0] + divider + values[1] + divider + values[2];
         }
 
         return '';
@@ -301,7 +303,6 @@ class PhoneIntake extends IntakeBase {
             this.IntakeParts.push(new IntakeDivider(this, '-'));
             this.IntakeParts.push(new NumberIntakeInput(this, placeHolderChar.repeat(4), eventsToPrevent));
 
-
             this.IntakeParts[1].NextPart = this.IntakeParts[3];
             this.IntakeParts[3].NextPart = this.IntakeParts[5];
             this.IntakeParts[3].PreviousPart = this.IntakeParts[1];
@@ -320,7 +321,9 @@ class PhoneIntake extends IntakeBase {
             this.IntakeParts[4].PreviousPart = this.IntakeParts[2];
         } else {
             throw 'Invalid format provided with PhoneIntakeOptions.'
-        }
+        }        
+        
+        this.IntakeParts[0].Element.style.marginLeft = "2px";
 
         this.IntakeParts.forEach(intakePart => {
             this.PartGroup.appendChild(intakePart.Element);
@@ -415,10 +418,6 @@ class IntakePartBase {
 
         this.UpdateWidth();
     }
-
-    UpdateWidth() {
-        this.Element.style.width = ((this.MaxLength + 1) * 7.2) + 'px';
-    }
 }
 
 class IntakeInput extends IntakePartBase {
@@ -447,7 +446,7 @@ class IntakeInput extends IntakePartBase {
     }
 
     UpdateWidth() {
-        this.Element.style.width = ((this.MaxLength + 1) * 7) + 'px';
+        this.Element.style.width = ((this.MaxLength + 2) * 7.2) + 'px';
     }
 
     InitializeListeners() {
@@ -765,5 +764,9 @@ class IntakeDivider extends IntakePartBase {
 
         this.Element.className = 'Intake-Part';
         this.Element.innerText = text;
+    }
+
+    UpdateWidth() {
+        this.Element.style.width = (this.MaxLength * 7.2) + 'px';
     }
 }
