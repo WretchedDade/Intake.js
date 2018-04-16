@@ -5,9 +5,14 @@
  */
 
 export class Intake {
-    constructor(container: String | HTMLElement, form: String | HTMLElement, existingValue: any, hiddenInput: String | HTMLElement, options: DateIntakeOptions | PhoneIntake | ZipCodeIntake, callback: Function);
+    constructor(container: String | HTMLElement, form: String | HTMLElement, existingValue: any, hiddenInput: String | HTMLElement, options: DateIntakeOptions | PhoneIntakeOptions | ZipCodeIntakeOptions, callback: Function);
 
+    Form: HTMLElement;
     Callback: Function;
+    Container: HTMLElement;
+    HiddenInput: HTMLElement;
+    BaseIntake: DateIntake | PhoneIntake | ZipCodeIntake;
+    Options: DateIntakeOptions | PhoneIntakeOptions | ZipCodeIntakeOptions;
     
     Destroy(): void;
 }
