@@ -614,6 +614,10 @@ class NumberIntakeInput extends IntakeInput {
      */
     constructor(parent, placeHolder, eventsToPrevent) {
         super(parent, placeHolder, eventsToPrevent, 'number', null);
+        
+        this.Element.min = 0;
+        this.Element.pattern = '[0-9]*'
+        this.Element.setAttribute('inputmode', 'numeric');
     }
 
     KeyDown(event) {
