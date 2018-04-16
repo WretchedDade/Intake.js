@@ -489,9 +489,9 @@ export class IntakeInput extends IntakePartBase {
 
     UpdateWidth() {
         if (!this.Element.value || this.Element.value == '')
-            this.Element.style.width = ((this.MaxLength + 1) * 7.7) + 'px';
+            this.Element.style.width = ((this.MaxLength + 3) * 7.7) + 'px';
         else
-            this.Element.style.width = ((this.Element.value.length) * 7.7) + 'px';
+            this.Element.style.width = ((this.Element.value.length + 2) * 7.7) + 'px';
     }
 
     InitializeListeners() {
