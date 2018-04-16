@@ -32,7 +32,7 @@ export class PhoneIntakeOptions {
 }
 
 export class ZipCodeIntakeOptions {
-    constructor(country: String = null, isNumeric: Boolean = null, maxLength: Number = null);
+    constructor(country: String, isNumeric: Boolean, maxLength: Number);
 
     Country: String;
     MaxLength: Number;
@@ -80,7 +80,7 @@ export class PhoneIntake extends IntakeBase {
 }
 
 export class ZipCodeIntake extends IntakeBase {
-    constructor(parent: Intake, existingValue: any): void;
+    constructor(parent: Intake, existingValue: any);
 
     GenerateIntakeParts(): void;
     
@@ -88,7 +88,7 @@ export class ZipCodeIntake extends IntakeBase {
 }
 
 export class IntakePartBase {
-    constructor(parent: BaseIntake, maxLength: Number, elementType: String);
+    constructor(parent: IntakeBase, maxLength: Number, elementType: String);
 
     Parent: String;
     MaxLength: Number;
@@ -96,7 +96,7 @@ export class IntakePartBase {
 }
 
 export class IntakeInput extends IntakePartBase {
-    constructor(parent: Intakebase, placeHolder: String, eventsToPrevent: String[], type: String = 'text', maxLength: Number = null);
+    constructor(parent: IntakeBase, placeHolder: String, eventsToPrevent: String[], type: String, maxLength: Number);
 
     PlaceHolder: String;
     JustGainedFocus: Boolean;
