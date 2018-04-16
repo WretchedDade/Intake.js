@@ -80,10 +80,8 @@
     document.addEventListener("DOMContentLoaded", function (event) {
         toggleDateOfBirth();
         phone = new Intake('#Custom-Phone', 'form', '', '#Phone', new PhoneIntakeOptions('(XXX)XXX-XXXX'));
-        usPostalCode = new Intake('#Custom-USPostalCode', 'form', '', '#USPostalCode', new ZipCodeIntakeOptions(
-            'USA'));
-        canadaPostalCode = new Intake('#Custom-CanadaPostalCode', 'form', '', '#CanadaPostalCode', new ZipCodeIntakeOptions(
-            'Canada'));
+        usPostalCode = new Intake('#Custom-USPostalCode', 'form', '', '#USPostalCode', new ZipCodeIntakeOptions('USA'));
+        canadaPostalCode = new Intake('#Custom-CanadaPostalCode', 'form', '', '#CanadaPostalCode', new ZipCodeIntakeOptions('Canada'));
 
         document.querySelector('select').onchange = function () {
             toggleDateOfBirth();

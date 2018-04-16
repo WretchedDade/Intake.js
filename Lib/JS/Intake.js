@@ -11,10 +11,11 @@ class Intake {
      * @param {String | HTMLElement} container The element (or selector for it) that should contain the generated input elements.
      * @param {String | HTMLElement} form The form (or selector for it) that contains the container.
      * @param {String | HtmlElement} hiddenInput The element (or selector for it) that should have it's value updated.
-     * @param {*} existingValue The existing value to populate the input with
+     * @param {*} existingValue The existing value to populate the input with.
      * @param {DateIntakeOptions | PhoneIntake | ZipCodeIntake} options Options used for generating the input. Type of options defines what time of input will be created.
+     * @param {Function} callback Function to be called on the blur event of each input. 
      */
-    constructor(container, form, existingValue, hiddenInput, options) {
+    constructor(container, form, existingValue, hiddenInput, options, callback = null) {
 
         if (typeof container === 'string')
             this.Container = document.querySelector(container);
@@ -47,6 +48,8 @@ class Intake {
             this.BaseIntake = new ZipCodeIntake(this, existingValue);
         else
             throw 'Unrecognized options provided';
+
+        this.Callback = callback;
     }
 
     Destroy() {
@@ -140,8 +143,12 @@ class IntakeBase {
 
         this.Parent.Container.onblur = function () {
             _this.IntakeParts.forEach(intakePart => {
-                if (intakePart instanceof IntakeInput)
+                if (intakePart instanceof IntakeInput) {
                     intakePart.TrimToMaxLength();
+
+                    if (_this.Parent.Callback)
+                        _this.Parent.Callback();
+                }
             });
         }
     }
@@ -522,6 +529,9 @@ class IntakeInput extends IntakePartBase {
         this.Element.onblur = function () {
             _this.TrimToMaxLength();
             _this.UpdateWidth();
+
+            if (_this.Parent.Parent.Callback)
+                _this.Parent.Parent.Callback();
         }
     }
 

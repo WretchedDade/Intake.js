@@ -5,8 +5,10 @@
  */
 
 export class Intake {
-    constructor(container: String | HTMLElement, form: String | HTMLElement, existingValue: any, hiddenInput: String | HTMLElement, options: DateIntakeOptions | PhoneIntake | ZipCodeIntake);
+    constructor(container: String | HTMLElement, form: String | HTMLElement, existingValue: any, hiddenInput: String | HTMLElement, options: DateIntakeOptions | PhoneIntake | ZipCodeIntake, callback: Function);
 
+    Callback: Function;
+    
     Destroy(): void;
 }
 
