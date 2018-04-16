@@ -700,9 +700,13 @@ export class NumberIntakeInput extends IntakeInput {
             case "LeftArrow":
             case "Tab":
             case "RightArrow":
-            case "Backspace":
                 break;
 
+            case "Backspace":
+                if (this.IsEmpty())
+                    this.UpdateWidth();
+                break;
+                
                 //Confirm input is complete and if so and they didn't just get here move them to the next input after enforcing the max length
                 //Android is dumb and sends 229 as the keycode, so we have no way of confirming if a numeric key was inputed.
                 //We must trust that since we are using an input type of 'Number' that the user only had the option to input numerics.

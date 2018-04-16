@@ -700,7 +700,11 @@ class NumberIntakeInput extends IntakeInput {
             case "LeftArrow":
             case "Tab":
             case "RightArrow":
+                break;
+
             case "Backspace":
+                if (this.IsEmpty())
+                    this.UpdateWidth();
                 break;
 
                 //Confirm input is complete and if so and they didn't just get here move them to the next input after enforcing the max length

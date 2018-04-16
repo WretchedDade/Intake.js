@@ -9,7 +9,7 @@
 	border: 1px solid #cccccc;
 	display: flex;
 	justify-content: space-between;
-    min-width: 200px;
+    width: 200px;
 }
 
 .Intake-PartGroup {
