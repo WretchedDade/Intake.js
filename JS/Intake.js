@@ -49,6 +49,12 @@ class Intake {
             throw 'Unrecognized options provided';
     }
 
+    Destroy() {
+        while (this.Container.firstChild) {
+            this.Container.removeChild(this.Container.firstChild);
+        }
+    }
+
 }
 
 class DateIntakeOptions {
@@ -131,10 +137,10 @@ class IntakeBase {
                 else
                     _this.UpdateHiddenInputWithRawValue();
             }
-        
-        this.Parent.Container.onblur = function(){
+
+        this.Parent.Container.onblur = function () {
             _this.IntakeParts.forEach(intakePart => {
-                if(intakePart instanceof IntakeInput)
+                if (intakePart instanceof IntakeInput)
                     intakePart.TrimToMaxLength();
             });
         }
@@ -219,12 +225,12 @@ class DateIntake extends IntakeBase {
 
         var eventsToPrevent = ['paste'];
 
-        this.IntakeParts.push(new NumberIntakeInput(this, parts[0], eventsToPrevent));
-        this.IntakeParts.push(new IntakeDivider(this, divider));
-        this.IntakeParts.push(new NumberIntakeInput(this, parts[1], eventsToPrevent));
-        this.IntakeParts.push(new IntakeDivider(this, divider));
-        this.IntakeParts.push(new NumberIntakeInput(this, parts[2], eventsToPrevent));
-        
+        for (let index = 0; index < parts.length; index++) {
+            this.IntakeParts.push(new NumberIntakeInput(this, parts[index], eventsToPrevent));
+
+            if (index != (parts.length - 1))
+                this.IntakeParts.push(new IntakeDivider(this, divider));
+        }
         this.IntakeParts[0].Element.style.marginLeft = "2px";
 
         this.IntakeParts.forEach(intakePart => {
@@ -232,10 +238,15 @@ class DateIntake extends IntakeBase {
             intakePart.Element.style.textAlign = 'center';
         });
 
-        this.IntakeParts[0].NextPart = this.IntakeParts[2];
-        this.IntakeParts[2].NextPart = this.IntakeParts[4];
-        this.IntakeParts[2].PreviousPart = this.IntakeParts[0];
-        this.IntakeParts[4].PreviousPart = this.IntakeParts[2];
+        for (let index = 0; index < this.IntakeParts.length; index++) {
+            if (this.IntakeParts[index] instanceof IntakeInput) {
+                if ((index + 2) <= this.IntakeParts.length)
+                    this.IntakeParts[index].NextPart = this.IntakeParts[index + 2];
+
+                if ((index - 2) >= 0)
+                    this.IntakeParts[index].PreviousPart = this.IntakeParts[index - 2];
+            }
+        }
     }
 
     /**
@@ -243,7 +254,30 @@ class DateIntake extends IntakeBase {
      * @param {String} value Value formatted as specified when input was constructed.
      */
     PopulateFromExistingValue(value) {
-        var parts = value.split(this.Parent.Options.Divider);
+        if (value == '')
+            return;
+            
+        var intakeParts = [];
+
+        this.IntakeParts.forEach(intakePart => {
+            if (intakePart instanceof IntakeInput) {
+                intakeParts.push(intakePart);
+            }
+        });
+
+        var valueParts = value.split(this.Parent.Options.Divider);
+
+        if (intakeParts.length == valueParts.length) {
+
+            for (let index = 0; index < intakeParts.length; index++) {
+                intakeParts[index].Element.value = valueParts[index];
+            }
+
+        } else if (this.intakeParts.length < valueParts.length) {
+
+        } else if (this.intakeParts.length > valueParts.length) {
+
+        }
 
         this.IntakeParts[0].Element.value = parts[0];
         this.IntakeParts[2].Element.value = parts[1];
@@ -353,7 +387,7 @@ class ZipCodeIntake extends IntakeBase {
         super(parent, existingValue);
 
         var _this = this;
-        this.Parent.Container.onclick = function(){
+        this.Parent.Container.onclick = function () {
             _this.IntakeParts[0].Element.focus();
         }
     }

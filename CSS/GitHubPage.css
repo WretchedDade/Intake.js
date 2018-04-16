@@ -1,0 +1,37 @@
+body {
+    background-color: whitesmoke;
+    font-family: 'Roboto', sans-serif;
+}
+
+h1{
+    color: #000080;
+    font-size: 2em;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.Intake-Container{
+    background-color: white;
+}
+
+#Options{
+    display: flex;
+    flex-flow: column;
+    margin: 20px;
+}
+
+.Option{
+    border-top: 2px solid #000080;
+    display: flex;
+    flex-flow: column;
+    padding: 20px 0;
+}
+
+.Option label{
+    color: #000080;
+}
+
+.Option .Intake-Container{
+    margin: 10px 0;
+}
