@@ -4,7 +4,7 @@
  * GitHub Repository: https://github.com/WretchedDade/Intake.js
  */
 
-class Intake {
+export class Intake {
 
     /**
      * 
@@ -57,7 +57,7 @@ class Intake {
 
 }
 
-class DateIntakeOptions {
+export class DateIntakeOptions {
 
     /**
      * 
@@ -70,7 +70,7 @@ class DateIntakeOptions {
     }
 }
 
-class PhoneIntakeOptions {
+export class PhoneIntakeOptions {
     /**
      * 
      * @param {'(XXX)XXX-XXXX' | 'XXX-XXX-XXXX'} format Format phone should take.
@@ -82,7 +82,7 @@ class PhoneIntakeOptions {
     }
 }
 
-class ZipCodeIntakeOptions {
+export class ZipCodeIntakeOptions {
 
     /**
      * 
@@ -97,7 +97,7 @@ class ZipCodeIntakeOptions {
     }
 }
 
-class IntakeBase {
+export class IntakeBase {
 
     /**
      * 
@@ -208,7 +208,7 @@ class IntakeBase {
     }
 }
 
-class DateIntake extends IntakeBase {
+export class DateIntake extends IntakeBase {
 
     /**
      * 
@@ -313,7 +313,7 @@ class DateIntake extends IntakeBase {
     }
 }
 
-class PhoneIntake extends IntakeBase {
+export class PhoneIntake extends IntakeBase {
 
     /**
      * 
@@ -377,7 +377,7 @@ class PhoneIntake extends IntakeBase {
     }
 }
 
-class ZipCodeIntake extends IntakeBase {
+export class ZipCodeIntake extends IntakeBase {
 
     /**
      * 
@@ -436,7 +436,7 @@ class ZipCodeIntake extends IntakeBase {
     }
 }
 
-class IntakePartBase {
+export class IntakePartBase {
 
     /**
      * @param {BaseIntake} parent This Part's Parent Object.
@@ -455,7 +455,7 @@ class IntakePartBase {
     }
 }
 
-class IntakeInput extends IntakePartBase {
+export class IntakeInput extends IntakePartBase {
 
     /**
      * @param {IntakeBase} parent The parent object of this divider. Usually an object that extends IntakeBase.
@@ -622,7 +622,7 @@ class IntakeInput extends IntakePartBase {
     }
 }
 
-class NumberIntakeInput extends IntakeInput {
+export class NumberIntakeInput extends IntakeInput {
 
     /**
      * @param {IntakeBase} parent The parent object of this divider. Usually an object that extends IntakeBase.
@@ -721,7 +721,7 @@ class NumberIntakeInput extends IntakeInput {
     }
 }
 
-class TextIntakeInput extends IntakeInput {
+export class TextIntakeInput extends IntakeInput {
 
     /**
      * @param {IntakeBase} parent The parent object of this divider. Usually an object that extends IntakeBase.
@@ -809,7 +809,7 @@ class TextIntakeInput extends IntakeInput {
     }
 }
 
-class IntakeDivider extends IntakePartBase {
+export class IntakeDivider extends IntakePartBase {
 
     /**
      * @param {IntakeBase} parent The parent object of this divider. Usually an object that extends IntakeBase.
