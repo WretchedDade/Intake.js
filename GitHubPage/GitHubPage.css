@@ -3,35 +3,115 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
-h1{
-    color: #000080;
-    font-size: 2em;
-    font-weight: bold;
-    margin-top: 20px;
+#Splash{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: space-between;
     text-align: center;
+}
+
+#Splash #Heading{
+    margin-top: 80px;
+}
+
+#Splash h1{
+    color: #000080;
+    font-size: 4em;
+    font-weight: bold;
+}
+
+#Splash h2{
+    padding: 10px;
+}
+
+#Splash #GitHubButtons{
+    margin-top: 40px;
+    padding: 20px;
+}
+
+#Splash #ArrowContainer{
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    height: 110px;
+    justify-content: center;
+    position: relative;
+    width: 90px;
+}
+
+#Splash #ArrowContainer p{
+    animation: Examples 1.5s ease-in-out 0s infinite;
+    bottom: 30px;
+    cursor: pointer;
+    position: absolute;
+}
+
+#Splash #ArrowContainer #DownArrow{
+    animation: ArrowDown 1.5s ease-in-out 0s infinite;
+    cursor: pointer;
+    position: absolute;
 }
 
 .Intake-Container{
     background-color: white;
 }
 
+
 #Options{
     display: flex;
     flex-flow: column;
-    margin: 20px;
+    padding: 20px;
+    margin: 10px;
+    min-height: 100vh;
+}
+
+#Options h1{
+    color: #000080;
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
 }
 
 .Option{
-    border-top: 2px solid #000080;
+    align-items: center;
     display: flex;
     flex-flow: column;
     padding: 20px 0;
+    margin: 20px;
+}
+
+.Option h2{
+    border-bottom: 1px dashed #000080;
+    color: #000080;
+    font-size: 1.5em;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
 }
 
 .Option label{
-    color: #000080;
+    display: none;
 }
 
-.Option .Intake-Container{
-    margin: 10px 0;
+@keyframes Examples{
+    0%{
+        bottom: 85px;
+    }50%{
+        bottom: 105px;
+    }100%{
+        bottom: 85px;
+    }
+}
+
+@keyframes ArrowDown{
+    0%{
+        bottom: 30px;
+    }50%{
+        bottom: 50px;
+    }100%{
+        bottom: 30px;
+    }
 }
