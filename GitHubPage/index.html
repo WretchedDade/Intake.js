@@ -21,6 +21,10 @@
 
     <script src="../Lib/JS/Intake.js"></script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    <link rel="stylesheet" href="./HighlightJS.VS2015.css">
+    <script src="./HighlightJS.Pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 </head>
 
 <body>
@@ -56,6 +60,12 @@
             <div id="Custom-DateOfBirth"></div>
 
             <input type="hidden" id="DateOfBirth" name="DateOfBirth" />
+
+            <pre>
+                <code>                    
+    var DateOfBirth = new Intake('Container Selector', 'Form Selector', 'Existing Value', 'Hidden Input', new DateIntakeOptions('MM/DD/YYYY','/'));   
+                </code>
+            </pre>
         </div>
     </div>
 
@@ -105,29 +115,14 @@
 
     document.addEventListener("DOMContentLoaded", function (event) {
 
-        toggleDateOfBirth();
+        dateOfBirth = new Intake('#Custom-DateOfBirth', 'form', '', '#DateOfBirth', new DateIntakeOptions('MM/DD/YYYY','/'));
+
         phone = new Intake('#Custom-Phone', 'form', '', '#Phone', new PhoneIntakeOptions('(XXX)XXX-XXXX'));
-        usPostalCode = new Intake('#Custom-USPostalCode', 'form', '', '#USPostalCode', new ZipCodeIntakeOptions(
-            'USA'));
-        canadaPostalCode = new Intake('#Custom-CanadaPostalCode', 'form', '', '#CanadaPostalCode', new ZipCodeIntakeOptions(
-            'Canada'));
 
-        document.querySelector('select').onchange = function () {
-            toggleDateOfBirth();
-        }
+        usPostalCode = new Intake('#Custom-USPostalCode', 'form', '', '#USPostalCode', new ZipCodeIntakeOptions('USA'));
+
+        canadaPostalCode = new Intake('#Custom-CanadaPostalCode', 'form', '', '#CanadaPostalCode', new ZipCodeIntakeOptions('Canada'));
     });
-
-    function toggleDateOfBirth() {
-        var selectedOption = document.querySelector('select').options[document.querySelector('select').selectedIndex];
-        var divider = selectedOption.getAttribute('data-divider');
-        var value = selectedOption.value;
-
-        if (dateOfBirth)
-            dateOfBirth.Destroy();
-
-        dateOfBirth = new Intake('#Custom-DateOfBirth', 'form', '', '#DateOfBirth', new DateIntakeOptions(value,
-            divider));
-    }
 
     function GoToOptions() {
         ScrollToElementByID('Options');
