@@ -96,6 +96,33 @@ body {
     display: none;
 }
 
+.Option .CodeAndDesc{
+    align-items: top;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding-top: 20px;
+}
+
+.Option .CodeAndDesc p{
+    padding: 10px;
+    max-width: 25%;
+}
+
+.Option .CodeAndDesc pre{
+    flex-grow: 2;
+    line-height: 1.2em;
+    padding: 10px;
+}
+
+.Option .CodeAndDesc pre code{
+    height: 100%
+}
+
+.Option .CodeAndDesc pre *{
+    line-height: 1.2em;
+}
+
 @keyframes Examples{
     0%{
         bottom: 85px;
@@ -113,5 +140,18 @@ body {
         bottom: 50px;
     }100%{
         bottom: 30px;
+    }
+}
+
+@media only screen and (max-width: 650px){
+    .Option .CodeAndDesc p{
+        max-width: 100%;
+        text-align: justify;
+    }
+}
+
+@media only screen and (max-width: 400px){
+    .Option .CodeAndDesc{
+        font-size: .7em;
     }
 }

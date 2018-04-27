@@ -24,7 +24,9 @@
 
     <link rel="stylesheet" href="./HighlightJS.VS2015.css">
     <script src="./HighlightJS.Pack.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
 </head>
 
 <body>
@@ -57,57 +59,95 @@
         <div class="Option">
             <h2>Date of Birth</h2>
             <label for="DateOfBirth">Date Of Birth:</label>
-            <div id="Custom-DateOfBirth"></div>
-
             <input type="hidden" id="DateOfBirth" name="DateOfBirth" />
 
-            <pre>
-                <code>                    
-    var DateOfBirth = new Intake('Container Selector', 'Form Selector', 'Existing Value', 'Hidden Input', new DateIntakeOptions('MM/DD/YYYY','/'));   
+            <div id="Custom-DateOfBirth"></div>
+            <div class="CodeAndDesc">
+                <p>To create a date of birth create an Intake object and pass a DateIntakeOptions object as the 5th parameter.
+                    The DateIntakeOptions is creating with a format and the delimiter used in that format. This enables you
+                    to use any format: MM/DD/YYYY, YYYY-DD-MM, MM/YYYY, Etc.</p>
+
+                <pre><code>                    
+    var DateOfBirth = new Intake(
+            'Container Selector', 
+            'Form Selector', 
+            'Existing Value', 
+            'Hidden Input', 
+            new DateIntakeOptions('MM/DD/YYYY','/') 
+    );   
+                </code></pre>
+            </div>
+        </div>
+
+        <div class="Option">
+            <h2>Phone</h2>
+            <label for="Phone">Phone:</label>
+            <input type="hidden" id="Phone" name="Phone" />
+
+            <div id="Custom-Phone"></div>
+            <div class="CodeAndDesc">
+                <p></p>
+
+                <pre>
+                    <code>                    
+    var phone = new Intake(
+            'Container Selector', 
+            'Form Selector', 
+            'Existing Value', 
+            'Hidden Input', 
+            new PhoneIntakeOptions('(XXX)XXX-XXXX')
+    );
+                    </code>
+                </pre>
+            </div>
+        </div>
+
+        <div class="Option">
+            <h2>US Postal Code</h2>
+            <label for="USPostalCode">US Postal Code:</label>
+
+            <input type="hidden" id="USPostalCode" name="USPostalCode" />
+
+            <div id="Custom-USPostalCode"></div>
+            <div class="CodeAndDesc">
+                <p></p>
+
+                <pre>
+                <code> 
+    var postalCode = new Intake(
+            'Container Selector', 
+            'Form Selector', 
+            'Existing Value', 
+            'Hidden Input', 
+            new ZipCodeIntakeOptions('USA')
+    );
                 </code>
             </pre>
+            </div>
+        </div>
+        <div class="Option">
+            <h2>Canada Postal Code</h2>
+            <label for="CanadaPostalCode">Canada Postal Code:</label>
+            <input type="hidden" id="CanadaPostalCode" name="CanadaPostalCode" />
+
+            <div id="Custom-CanadaPostalCode"></div>
+            <div class="CodeAndDesc">
+                <p></p>
+
+                <pre>
+                <code> 
+    var postalCode = new Intake(
+            'Container Selector', 
+            'Form Selector', 
+            'Existing Value', 
+            'Hidden Input', 
+            new ZipCodeIntakeOptions('Canada')
+    );
+                </code>
+            </pre>
+            </div>
         </div>
     </div>
-
-    <form method="POST">
-
-        <label for="Phone">Phone:</label>
-        <br/>
-        <br/>
-        <div id="Custom-Phone"></div>
-        <input type="hidden" id="Phone" name="Phone" />
-        <br/>
-        <br/>
-
-        <label for="USPostalCode">US Postal Code:</label>
-        <br/>
-        <br/>
-        <div id="Custom-USPostalCode"></div>
-        <input type="hidden" id="USPostalCode" name="USPostalCode" />
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-
-        <label for="CanadaPostalCode">Canada Postal Code:</label>
-        <br/>
-        <br/>
-        <div id="Custom-CanadaPostalCode"></div>
-        <input type="hidden" id="CanadaPostalCode" name="CanadaPostalCode" />
-        <br/>
-        <br/>
-    </form>
-
-    <select>
-        <option selected="selected" value="mm/dd/yyyy" data-divider="/">mm/dd/yyyy</option>
-        <option value="MM/DD/YYYY" data-divider="/">MM/DD/YYYY</option>
-        <option value="DD/MM/YYYY" data-divider="/">DD/MM/YYYY</option>
-        <option value="YYYY/MM/DD" data-divider="/">YYYY/MM/DD</option>
-        <option value="MM/DD" data-divider="/">MM/DD</option>
-        <option value="MM-DD-YYYY" data-divider="-">MM-DD-YYYY</option>
-        <option value="DD-MM-YYYY" data-divider="-">DD-MM-YYYY</option>
-        <option value="YYYY-MM-DD" data-divider="-">YYYY-MM-DD</option>
-    </select>
 </body>
 
 <script>
@@ -115,13 +155,16 @@
 
     document.addEventListener("DOMContentLoaded", function (event) {
 
-        dateOfBirth = new Intake('#Custom-DateOfBirth', 'form', '', '#DateOfBirth', new DateIntakeOptions('MM/DD/YYYY','/'));
+        dateOfBirth = new Intake('#Custom-DateOfBirth', 'form', '', '#DateOfBirth', new DateIntakeOptions(
+            'MM/DD/YYYY', '/'));
 
         phone = new Intake('#Custom-Phone', 'form', '', '#Phone', new PhoneIntakeOptions('(XXX)XXX-XXXX'));
 
-        usPostalCode = new Intake('#Custom-USPostalCode', 'form', '', '#USPostalCode', new ZipCodeIntakeOptions('USA'));
+        usPostalCode = new Intake('#Custom-USPostalCode', 'form', '', '#USPostalCode', new ZipCodeIntakeOptions(
+            'USA'));
 
-        canadaPostalCode = new Intake('#Custom-CanadaPostalCode', 'form', '', '#CanadaPostalCode', new ZipCodeIntakeOptions('Canada'));
+        canadaPostalCode = new Intake('#Custom-CanadaPostalCode', 'form', '', '#CanadaPostalCode', new ZipCodeIntakeOptions(
+            'Canada'));
     });
 
     function GoToOptions() {
