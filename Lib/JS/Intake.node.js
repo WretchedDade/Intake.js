@@ -238,6 +238,7 @@ export class DateIntake extends IntakeBase {
             if (index != (parts.length - 1))
                 this.IntakeParts.push(new IntakeDivider(this, divider));
         }
+
         this.IntakeParts[0].Element.style.marginLeft = "2px";
 
         this.IntakeParts.forEach(intakePart => {
@@ -275,21 +276,11 @@ export class DateIntake extends IntakeBase {
 
         var valueParts = value.split(this.Parent.Options.Divider);
 
-        if (intakeParts.length == valueParts.length) {
-
+        if (intakeParts && intakeParts.length && valueParts) {
             for (let index = 0; index < intakeParts.length; index++) {
                 intakeParts[index].Element.value = valueParts[index];
             }
-
-        } else if (this.intakeParts.length < valueParts.length) {
-
-        } else if (this.intakeParts.length > valueParts.length) {
-
         }
-
-        this.IntakeParts[0].Element.value = parts[0];
-        this.IntakeParts[2].Element.value = parts[1];
-        this.IntakeParts[4].Element.value = parts[2];
     }
 
     UpdateHiddenInputWithFormattedValue() {
