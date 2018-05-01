@@ -20,83 +20,193 @@
     <link type="text/css" rel="stylesheet" href="./GitHubPage.css" />
 
     <script src="../Lib/JS/Intake.js"></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    <link rel="stylesheet" href="./HighlightJS.VS2015.css">
+    <script src="./HighlightJS.Pack.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
 </head>
 
-<body style="padding: 20px;">
+<body>
 
-    <h1>Intake JS</h1>
+    <div id="Splash">
+        <div id="Heading">
+            <h1>Intake.JS</h1>
+            <h2>Create custom input elements</h2>
+
+            <div id="GitHubButtons">
+                <a class="github-button" href="https://github.com/WretchedDade/Intake.js/archive/master.zip" data-icon="octicon-cloud-download"
+                    data-size="large" aria-label="Download WretchedDade/Intake.js on GitHub">Download</a>
+
+                <a class="github-button" href="https://github.com/WretchedDade" data-size="large" data-show-count="true" aria-label="Follow @WretchedDade on GitHub">Follow @WretchedDade</a>
+
+                <!-- <a class="github-button" href="https://github.com/WretchedDade/Intake.js" data-icon="octicon-star" data-size="large" aria-label="Star WretchedDade/Intake.js on GitHub">Star</a>
+
+            <a class="github-button" href="https://github.com/WretchedDade/Intake.js/fork" data-icon="octicon-repo-forked" data-size="large"
+                aria-label="Fork WretchedDade/Intake.js on GitHub">Fork</a> -->
+            </div>
+        </div>
+
+        <div id="ArrowContainer" onclick="ScrollToElementByID('Options')">
+            <p onclick="ScrollToElementByID('Options')">Demos</p>
+            <i id="DownArrow" class="fas fa-arrow-down fa-3x" onclick="ScrollToElementByID('Options')"></i>
+        </div>
+    </div>
 
     <div id="Options">
         <div class="Option">
+            <h2>Date of Birth</h2>
             <label for="DateOfBirth">Date Of Birth:</label>
             <input type="hidden" id="DateOfBirth" name="DateOfBirth" />
 
             <div id="Custom-DateOfBirth"></div>
+            <div class="CodeAndDesc">
+                <p>To create a date of birth create an Intake object and pass a DateIntakeOptions object as the 5th parameter.
+                    The DateIntakeOptions is creating with a format and the delimiter used in that format. This enables you
+                    to use any format: MM/DD/YYYY, YYYY-DD-MM, MM/YYYY, Etc.</p>
+
+                <pre><code>                    
+    var DateOfBirth = new Intake(
+            'Container Selector', 
+            'Form Selector', 
+            'Existing Value', 
+            'Hidden Input', 
+            new DateIntakeOptions('MM/DD/YYYY','/') 
+    );   
+                </code></pre>
+            </div>
+        </div>
+
+        <div class="Option">
+            <h2>Phone</h2>
+            <label for="Phone">Phone:</label>
+            <input type="hidden" id="Phone" name="Phone" />
+
+            <div id="Custom-Phone"></div>
+            <div class="CodeAndDesc">
+                <p></p>
+
+                <pre>
+                    <code>                    
+    var phone = new Intake(
+            'Container Selector', 
+            'Form Selector', 
+            'Existing Value', 
+            'Hidden Input', 
+            new PhoneIntakeOptions('(XXX)XXX-XXXX')
+    );
+                    </code>
+                </pre>
+            </div>
+        </div>
+
+        <div class="Option">
+            <h2>US Postal Code</h2>
+            <label for="USPostalCode">US Postal Code:</label>
+
+            <input type="hidden" id="USPostalCode" name="USPostalCode" />
+
+            <div id="Custom-USPostalCode"></div>
+            <div class="CodeAndDesc">
+                <p></p>
+
+                <pre>
+                <code> 
+    var postalCode = new Intake(
+            'Container Selector', 
+            'Form Selector', 
+            'Existing Value', 
+            'Hidden Input', 
+            new ZipCodeIntakeOptions('USA')
+    );
+                </code>
+            </pre>
+            </div>
+        </div>
+        <div class="Option">
+            <h2>Canada Postal Code</h2>
+            <label for="CanadaPostalCode">Canada Postal Code:</label>
+            <input type="hidden" id="CanadaPostalCode" name="CanadaPostalCode" />
+
+            <div id="Custom-CanadaPostalCode"></div>
+            <div class="CodeAndDesc">
+                <p></p>
+
+                <pre>
+                <code> 
+    var postalCode = new Intake(
+            'Container Selector', 
+            'Form Selector', 
+            'Existing Value', 
+            'Hidden Input', 
+            new ZipCodeIntakeOptions('Canada')
+    );
+                </code>
+            </pre>
+            </div>
         </div>
     </div>
-
-    <form method="POST">
-
-        <label for="Phone">Phone:</label>
-        <br/>
-        <br/>
-        <div id="Custom-Phone"></div>
-        <input type="hidden" id="Phone" name="Phone" />
-        <br/>
-        <br/>
-
-        <label for="USPostalCode">US Postal Code:</label>
-        <br/>
-        <br/>
-        <div id="Custom-USPostalCode"></div>
-        <input type="hidden" id="USPostalCode" name="USPostalCode"/> <br/> <br/>
-        <br/>
-        <br/>
-
-        <label for="CanadaPostalCode">Canada Postal Code:</label>
-        <br/>
-        <br/>
-        <div id="Custom-CanadaPostalCode"></div>
-        <input type="hidden" id="CanadaPostalCode" name="CanadaPostalCode" />
-        <br/>
-        <br/>
-    </form>
-
-    <select>
-        <option selected="selected" value="mm/dd/yyyy" data-divider="/">mm/dd/yyyy</option>
-        <option value="MM/DD/YYYY" data-divider="/">MM/DD/YYYY</option>
-        <option value="DD/MM/YYYY" data-divider="/">DD/MM/YYYY</option>
-        <option value="YYYY/MM/DD" data-divider="/">YYYY/MM/DD</option>
-        <option value="MM/DD" data-divider="/">MM/DD</option>
-        <option value="MM-DD-YYYY" data-divider="-">MM-DD-YYYY</option>
-        <option value="DD-MM-YYYY" data-divider="-">DD-MM-YYYY</option>
-        <option value="YYYY-MM-DD" data-divider="-">YYYY-MM-DD</option>
-    </select>
 </body>
 
 <script>
     var dateOfBirth, phone, usPostalCode, canadaPostalCode;
 
     document.addEventListener("DOMContentLoaded", function (event) {
-        toggleDateOfBirth();
-        phone = new Intake('#Custom-Phone', 'form', '', '#Phone', new PhoneIntakeOptions('(XXX)XXX-XXXX'));
-        usPostalCode = new Intake('#Custom-USPostalCode', 'form', '', '#USPostalCode', new ZipCodeIntakeOptions('USA'));
-        canadaPostalCode = new Intake('#Custom-CanadaPostalCode', 'form', '', '#CanadaPostalCode', new ZipCodeIntakeOptions('Canada'));
 
-        document.querySelector('select').onchange = function () {
-            toggleDateOfBirth();
-        }
+        dateOfBirth = new Intake('#Custom-DateOfBirth', 'form', '', '#DateOfBirth', new DateIntakeOptions(
+            'MM/DD/YYYY', '/'));
+
+        phone = new Intake('#Custom-Phone', 'form', '', '#Phone', new PhoneIntakeOptions('(XXX)XXX-XXXX'));
+
+        usPostalCode = new Intake('#Custom-USPostalCode', 'form', '', '#USPostalCode', new ZipCodeIntakeOptions(
+            'USA'));
+
+        canadaPostalCode = new Intake('#Custom-CanadaPostalCode', 'form', '', '#CanadaPostalCode', new ZipCodeIntakeOptions(
+            'Canada'));
     });
 
-    function toggleDateOfBirth() {
-        var selectedOption = document.querySelector('select').options[document.querySelector('select').selectedIndex];
-        var divider = selectedOption.getAttribute('data-divider');
-        var value = selectedOption.value;
+    function GoToOptions() {
+        ScrollToElementByID('Options');
+    }
 
-        if(dateOfBirth)
-            dateOfBirth.Destroy();
+    function ScrollToQuerySelector(selector, duration = 1000) {
+        ScrollTo(document.querySelector(selector), duration);
+    }
 
-        dateOfBirth = new Intake('#Custom-DateOfBirth', 'form', '', '#DateOfBirth', new DateIntakeOptions(value, divider));
+    function ScrollToElementByID(id, duration = 1000) {
+        ScrollTo(document.getElementById(id), duration);
+    }
+
+    function ScrollTo(element, duration) {
+        let start = document.documentElement.scrollTop;
+        let change = element.offsetTop - start;
+        let increment = 20;
+        let currentTime = 0;
+
+        var animateScroll = (() => {
+            currentTime += increment;
+
+            document.documentElement.scrollTop = EaseInOutQuad(currentTime, start, change, duration)
+
+            if (currentTime < duration) {
+                setTimeout(animateScroll, increment);
+            }
+        });
+
+        animateScroll();
+    }
+
+    function EaseInOutQuad(currentTime, start, change, duration) {
+        currentTime /= duration / 2;
+
+        if (currentTime < 1)
+            return change / 2 * currentTime * currentTime + start;
+
+        currentTime--;
+
+        return -change / 2 * (currentTime * (currentTime - 2) - 1) + start;
     }
 </script>
 
