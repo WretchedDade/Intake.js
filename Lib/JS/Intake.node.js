@@ -213,6 +213,24 @@ export class IntakeBase {
 
         return value;
     }
+
+    GetFirstEmptyIntakeInput() {
+
+        var firstEmptyIntakeInput = null;
+
+        //Return the first IntakeInput that is empty.
+        this.IntakeParts.some(intakePart => {
+            if (intakePart instanceof IntakeInput) {
+                if (intakePart.IsEmpty())
+                    firstEmptyIntakeInput = intakePart;
+                    
+                return true;
+            }
+        });
+
+        //Return null if there are no empty IntakeInputs
+        return firstEmptyIntakeInput;
+    }
 }
 
 export class DateIntake extends IntakeBase {
@@ -509,8 +527,14 @@ export class IntakeInput extends IntakePartBase {
             _this.KeyDown(e);
         }
 
-        this.Element.onclick = function () {
-            this.focus();
+        this.Element.onclick = function (e) {
+            //Will be null if no empty parts
+            var firstEmptyInput = _this.Parent.GetFirstEmptyIntakeInput();
+
+            if (firstEmptyInput && firstEmptyInput.Element)
+                firstEmptyInput.Element.focus();
+            else
+                this.focus();
         };
 
         this.Element.onfocus = function () {
