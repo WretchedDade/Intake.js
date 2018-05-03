@@ -50,10 +50,11 @@ export class Intake {
             throw 'Unrecognized options provided';
 
         this.Callback = callback;
-        
+
         var _this = this;
-        this.Container.onclick = function(){
-            _this.BaseIntake.SelectFirstIntakeInput();
+        this.Container.onclick = function (e) {
+            if (e.target == this)
+                _this.BaseIntake.SelectFirstIntakeInput();
         };
     }
 
@@ -137,6 +138,7 @@ export class IntakeBase {
             this.BtnClear.onclick = function () {
                 _this.Clear();
                 _this.UpdateBtnClearVisibility();
+                _this.SelectFirstIntakeInput();
             }
 
             this.UpdateBtnClearVisibility();
@@ -241,9 +243,9 @@ export class IntakeBase {
         return firstEmptyIntakeInput;
     }
 
-    SelectFirstIntakeInput(){
-        this.IntakeParts.some(intakePart =>{
-            if(intakePart instanceof IntakeInput){
+    SelectFirstIntakeInput() {
+        this.IntakeParts.some(intakePart => {
+            if (intakePart instanceof IntakeInput) {
                 intakePart.Element.focus();
 
                 return true;
@@ -292,7 +294,6 @@ export class DateIntake extends IntakeBase {
 
         this.IntakeParts.forEach(intakePart => {
             this.PartGroup.appendChild(intakePart.Element);
-            intakePart.Element.style.textAlign = 'left';
             intakePart.Element.style.paddingLeft = '4px';
         });
 
@@ -409,7 +410,6 @@ export class PhoneIntake extends IntakeBase {
 
         this.IntakeParts.forEach(intakePart => {
             this.PartGroup.appendChild(intakePart.Element);
-            intakePart.Element.style.textAlign = 'left';
         });
     }
 
@@ -529,9 +529,16 @@ export class IntakeInput extends IntakePartBase {
 
     UpdateWidth() {
         if (!this.Element.value || this.Element.value == '')
-            this.Element.style.width = ((this.MaxLength + 1) * 7.7) + 'px';
+            this.Element.style.width = ((this.MaxLength + 2) * 7.7) + 'px';
         else
-            this.Element.style.width = ((this.Element.value.length) * 7.7) + 'px';
+            this.Element.style.width = ((this.Element.value.length + 1) * 7.7) + 'px';
+    }
+
+    UpdateTextAlignment() {
+        if (this.IsEmpty())
+            this.Element.className = 'Intake-Part';
+        else
+            this.Element.className = 'Intake-Part Intake-Center';
     }
 
     InitializeListeners() {
@@ -580,6 +587,7 @@ export class IntakeInput extends IntakePartBase {
         this.Element.onblur = function () {
             _this.TrimToMaxLength();
             _this.UpdateWidth();
+            _this.UpdateTextAlignment();
 
             if (_this.Parent.Parent.Callback)
                 _this.Parent.Parent.Callback();
@@ -668,6 +676,7 @@ export class IntakeInput extends IntakePartBase {
     Clear() {
         this.Element.value = '';
         this.UpdateWidth();
+        this.UpdateTextAlignment();
     }
 
     KeyDown(event) {
@@ -766,8 +775,10 @@ export class NumberIntakeInput extends IntakeInput {
                 break;
 
             case "Backspace":
-                if (this.IsEmpty())
+                if (this.IsEmpty()) {
                     this.UpdateWidth();
+                    this.UpdateTextAlignment();
+                }
                 break;
 
                 //Confirm input is complete and if so and they didn't just get here move them to the next input after enforcing the max length

@@ -26,9 +26,13 @@
 	border: none;
 	margin: 0;
 	outline: none !important;
-	padding: 1px;
+	text-align: left;
 
 	-moz-appearance: textfield;
+}
+
+.Intake-Part.Intake-Center{
+	text-align: center;
 }
 
 .Intake-Part::-webkit-outer-spin-button,
