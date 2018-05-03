@@ -12,6 +12,10 @@
     width: 200px;
 }
 
+.Intake-Selected{
+	outline: 1px solid #017dc7;
+}
+
 .Intake-PartGroup {
 	display: flex;
 	padding: 4px;
@@ -22,6 +26,7 @@
 	border: none;
 	margin: 0;
 	outline: none !important;
+	padding: 1px;
 
 	-moz-appearance: textfield;
 }

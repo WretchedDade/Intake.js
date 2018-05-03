@@ -1,6 +1,6 @@
 {
   "name": "@wretcheddade/intake.js",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A library for creating custom user inputs.",
   "main": "JS/Intake.Node.js",
   "types": "JS/Intake.d.ts",

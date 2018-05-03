@@ -50,6 +50,11 @@ export class Intake {
             throw 'Unrecognized options provided';
 
         this.Callback = callback;
+        
+        var _this = this;
+        this.Container.onclick = function(){
+            _this.BaseIntake.SelectFirstIntakeInput();
+        };
     }
 
     Destroy() {
@@ -128,10 +133,14 @@ export class IntakeBase {
 
         var _this = this;
 
-        if (this.BtnClear)
+        if (this.BtnClear) {
             this.BtnClear.onclick = function () {
                 _this.Clear();
+                _this.UpdateBtnClearVisibility();
             }
+
+            this.UpdateBtnClearVisibility();
+        }
 
         if (this.Parent.Form)
             this.Parent.Form.onsubmit = function () {
@@ -223,13 +232,35 @@ export class IntakeBase {
             if (intakePart instanceof IntakeInput) {
                 if (intakePart.IsEmpty())
                     firstEmptyIntakeInput = intakePart;
-                    
+
                 return true;
             }
         });
 
         //Return null if there are no empty IntakeInputs
         return firstEmptyIntakeInput;
+    }
+
+    SelectFirstIntakeInput(){
+        this.IntakeParts.some(intakePart =>{
+            if(intakePart instanceof IntakeInput){
+                intakePart.Element.focus();
+
+                return true;
+            }
+        })
+    }
+
+    UpdateBtnClearVisibility() {
+        var allEmpty = true;
+
+        this.IntakeParts.forEach(intakePart => {
+            if (intakePart instanceof IntakeInput)
+                allEmpty = allEmpty && intakePart.IsEmpty()
+
+        });
+
+        this.BtnClear.style.display = allEmpty ? 'none' : 'block';
     }
 }
 
@@ -498,9 +529,9 @@ export class IntakeInput extends IntakePartBase {
 
     UpdateWidth() {
         if (!this.Element.value || this.Element.value == '')
-            this.Element.style.width = ((this.MaxLength + 3) * 7.7) + 'px';
+            this.Element.style.width = ((this.MaxLength + 1) * 7.7) + 'px';
         else
-            this.Element.style.width = ((this.Element.value.length + 2) * 7.7) + 'px';
+            this.Element.style.width = ((this.Element.value.length) * 7.7) + 'px';
     }
 
     InitializeListeners() {
@@ -521,6 +552,9 @@ export class IntakeInput extends IntakePartBase {
 
         this.Element.onkeyup = function (e) {
             _this.KeyUp(e);
+
+            if (_this.Parent.BtnClear)
+                _this.Parent.UpdateBtnClearVisibility();
         }
 
         this.Element.onkeydown = function (e) {
@@ -539,6 +573,8 @@ export class IntakeInput extends IntakePartBase {
 
         this.Element.onfocus = function () {
             _this.JustGainedFocus = true;
+
+            _this.Parent.Parent.Container.className = 'Intake-Container Intake-Selected';
         };
 
         this.Element.onblur = function () {
@@ -547,6 +583,8 @@ export class IntakeInput extends IntakePartBase {
 
             if (_this.Parent.Parent.Callback)
                 _this.Parent.Parent.Callback();
+
+            _this.Parent.Parent.Container.className = 'Intake-Container';
         }
     }
 
