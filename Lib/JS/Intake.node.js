@@ -378,13 +378,16 @@ export class PhoneIntake extends IntakeBase {
 
         var placeHolderChar = this.Parent.Options.PlaceHolderCharacter;
 
+        var placeHolder3Times = `${placeHolderChar}${placeHolderChar}${placeHolderChar}`;
+        var placeHolder4Times = `${placeHolder3Times}${placeHolderChar}`;
+
         if (this.Parent.Options.Format === '(XXX)XXX-XXXX') {
             this.IntakeParts.push(new IntakeDivider(this, '('));
-            this.IntakeParts.push(new NumberIntakeInput(this, placeHolderChar.repeat(3), eventsToPrevent));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder3Times, eventsToPrevent));
             this.IntakeParts.push(new IntakeDivider(this, ')'));
-            this.IntakeParts.push(new NumberIntakeInput(this, placeHolderChar.repeat(3), eventsToPrevent));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder3Times, eventsToPrevent));
             this.IntakeParts.push(new IntakeDivider(this, '-'));
-            this.IntakeParts.push(new NumberIntakeInput(this, placeHolderChar.repeat(4), eventsToPrevent));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder4Times, eventsToPrevent));
 
             this.IntakeParts[1].NextPart = this.IntakeParts[3];
             this.IntakeParts[3].NextPart = this.IntakeParts[5];
@@ -392,11 +395,11 @@ export class PhoneIntake extends IntakeBase {
             this.IntakeParts[5].PreviousPart = this.IntakeParts[3];
 
         } else if (this.Parent.Options.Format === 'XXX-XXX-XXX') {
-            this.IntakeParts.push(new NumberIntakeInput(this, placeHolderChar.repeat(3), eventsToPrevent));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder3Times, eventsToPrevent));
             this.IntakeParts.push(new IntakeDivider(this, '-'));
-            this.IntakeParts.push(new NumberIntakeInput(this, placeHolderChar.repeat(3), eventsToPrevent));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder3Times, eventsToPrevent));
             this.IntakeParts.push(new IntakeDivider(this, '-'));
-            this.IntakeParts.push(new NumberIntakeInput(this, placeHolderChar.repeat(4), eventsToPrevent));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder4Times, eventsToPrevent));
 
             this.IntakeParts[0].NextPart = this.IntakeParts[2];
             this.IntakeParts[2].NextPart = this.IntakeParts[4];
@@ -460,10 +463,15 @@ export class ZipCodeIntake extends IntakeBase {
         } else if (!this.Parent.Options.MaxLength) {
             throw 'MaxLength must be provided when Country is ommitted from ZipCodeIntakeOptions';
         } else {
+            var repeatedPlaceholder = ' ';
+
+            for(var i = 0; i < this.Parent.Options.MaxLength; i++)
+                repeatedPlaceholder = `${repeatedPlaceholder} `;
+
             if (this.Parent.Options.IsNumeric)
-                intakePart = new NumberIntakeInput(this, ' '.repeat(this.Parent.Options.MaxLength), eventsToPrevent);
+                intakePart = new NumberIntakeInput(this, repeatedPlaceholder, eventsToPrevent);
             else
-                intakePart = new TextIntakeInput(this, ' '.repeat(this.Parent.Options.MaxLength), eventsToPrevent);
+                intakePart = new TextIntakeInput(this, repeatedPlaceholder, eventsToPrevent);
         }
 
         this.IntakeParts.push(intakePart);
