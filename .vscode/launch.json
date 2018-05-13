@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome",
-            "url": "${workspaceFolder}/GitHubPage/index.html",
+            "url": "${workspaceFolder}/index.html",
             "webRoot": "${workspaceFolder}"
         }
     ]
