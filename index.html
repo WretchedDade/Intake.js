@@ -19,7 +19,7 @@
     <link type="text/css" rel="stylesheet" href="./Lib/CSS/Intake.css" />
     <link type="text/css" rel="stylesheet" href="./CSS/GitHubPage.css" />
 
-    <script src="./Lib/JS/Intake.min.js"></script>
+    <script src="./Lib/JS/Intake.js"></script>
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 
     <link rel="stylesheet" href="./CSS/HighlightJS.VS2015.css">
@@ -156,15 +156,15 @@
     document.addEventListener("DOMContentLoaded", function (event) {
 
         dateOfBirth = new Intake('#Custom-DateOfBirth', 'form', '', '#DateOfBirth', new DateIntakeOptions(
-            'MM/DD/YYYY', '/'));
+            'MM/DD/YYYY', '/'), null, 2);
 
-        phone = new Intake('#Custom-Phone', 'form', '', '#Phone', new PhoneIntakeOptions('(XXX)XXX-XXXX'));
+        phone = new Intake('#Custom-Phone', 'form', '', '#Phone', new PhoneIntakeOptions('(XXX)XXX-XXXX'), null, 2);
 
         usPostalCode = new Intake('#Custom-USPostalCode', 'form', '', '#USPostalCode', new ZipCodeIntakeOptions(
-            'USA'));
+            'USA'), null, 2);
 
         canadaPostalCode = new Intake('#Custom-CanadaPostalCode', 'form', '', '#CanadaPostalCode', new ZipCodeIntakeOptions(
-            'Canada'));
+            'Canada'), null, 2);
     });
 
     function GoToOptions() {

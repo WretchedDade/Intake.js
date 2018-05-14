@@ -15,7 +15,7 @@ export class Intake {
      * @param {DateIntakeOptions | PhoneIntake | ZipCodeIntake} options Options used for generating the input. Type of options defines what time of input will be created.
      * @param {Function} callback Function to be called on the blur event of each input. 
      */
-    constructor(container, form, existingValue, hiddenInput, options, callback = null) {
+    constructor(container, form, existingValue, hiddenInput, options, callback = null, widthFactor = 2) {
 
         if (typeof container === 'string')
             this.Container = document.querySelector(container);
@@ -41,11 +41,11 @@ export class Intake {
         this.Options = options;
 
         if (options instanceof DateIntakeOptions)
-            this.BaseIntake = new DateIntake(this, existingValue);
+            this.BaseIntake = new DateIntake(this, existingValue, widthFactor);
         else if (options instanceof PhoneIntakeOptions)
-            this.BaseIntake = new PhoneIntake(this, existingValue);
+            this.BaseIntake = new PhoneIntake(this, existingValue, widthFactor);
         else if (options instanceof ZipCodeIntakeOptions)
-            this.BaseIntake = new ZipCodeIntake(this, existingValue);
+            this.BaseIntake = new ZipCodeIntake(this, existingValue, widthFactor);
         else
             throw 'Unrecognized options provided';
 
@@ -113,8 +113,10 @@ export class IntakeBase {
      * @param {Intake} parent The parent of this object. Usually an instance of Intake.
      * @param {*} existingValue The value to set the input to by default.
      */
-    constructor(parent, existingValue) {
+    constructor(parent, existingValue, widthFactor) {
         this.Parent = parent;
+
+        this.WidthFactor = widthFactor;
 
         this.GeneratePartGroup();
 
@@ -273,8 +275,8 @@ export class DateIntake extends IntakeBase {
      * @param {Intake} parent The parent of this object. Usually an instance of Intake.
      * @param {*} existingValue The value to set the input to by default.
      */
-    constructor(parent, existingValue) {
-        super(parent, existingValue);
+    constructor(parent, existingValue, widthFactor) {
+        super(parent, existingValue, widthFactor);
     }
 
     GenerateIntakeParts() {
@@ -284,7 +286,7 @@ export class DateIntake extends IntakeBase {
         var eventsToPrevent = ['paste'];
 
         for (let index = 0; index < parts.length; index++) {
-            this.IntakeParts.push(new NumberIntakeInput(this, parts[index], eventsToPrevent, parts[index]));
+            this.IntakeParts.push(new NumberIntakeInput(this, parts[index], eventsToPrevent, parts[index], this.WidthFactor));
 
             if (index != (parts.length - 1))
                 this.IntakeParts.push(new IntakeDivider(this, divider));
@@ -368,8 +370,8 @@ export class PhoneIntake extends IntakeBase {
      * @param {Intake} parent The parent of this object. Usually an instance of Intake.
      * @param {*} existingValue The value to set the input to by default. Should be unformatted, similar to 0123456789.
      */
-    constructor(parent, existingValue) {
-        super(parent, existingValue);
+    constructor(parent, existingValue, widthFactor = 2) {
+        super(parent, existingValue, widthFactor);
     }
 
     GenerateIntakeParts() {
@@ -383,11 +385,11 @@ export class PhoneIntake extends IntakeBase {
 
         if (this.Parent.Options.Format === '(XXX)XXX-XXXX') {
             this.IntakeParts.push(new IntakeDivider(this, '('));
-            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder3Times, eventsToPrevent));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder3Times, eventsToPrevent, null, this.WidthFactor));
             this.IntakeParts.push(new IntakeDivider(this, ')'));
-            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder3Times, eventsToPrevent));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder3Times, eventsToPrevent, null, this.WidthFactor));
             this.IntakeParts.push(new IntakeDivider(this, '-'));
-            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder4Times, eventsToPrevent));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder4Times, eventsToPrevent, null, this.WidthFactor));
 
             this.IntakeParts[1].NextPart = this.IntakeParts[3];
             this.IntakeParts[3].NextPart = this.IntakeParts[5];
@@ -395,11 +397,11 @@ export class PhoneIntake extends IntakeBase {
             this.IntakeParts[5].PreviousPart = this.IntakeParts[3];
 
         } else if (this.Parent.Options.Format === 'XXX-XXX-XXX') {
-            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder3Times, eventsToPrevent));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder3Times, eventsToPrevent, null, this.WidthFactor));
             this.IntakeParts.push(new IntakeDivider(this, '-'));
-            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder3Times, eventsToPrevent));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder3Times, eventsToPrevent, null, this.WidthFactor));
             this.IntakeParts.push(new IntakeDivider(this, '-'));
-            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder4Times, eventsToPrevent));
+            this.IntakeParts.push(new NumberIntakeInput(this, placeHolder4Times, eventsToPrevent, null, this.WidthFactor));
 
             this.IntakeParts[0].NextPart = this.IntakeParts[2];
             this.IntakeParts[2].NextPart = this.IntakeParts[4];
@@ -434,8 +436,8 @@ export class ZipCodeIntake extends IntakeBase {
      * @param {Intake} parent The parent of this object. Usually an instance of Intake.
      * @param {*} existingValue The value to set the input to by default. Should be unformatted, similar to 0123456789.
      */
-    constructor(parent, existingValue) {
-        super(parent, existingValue);
+    constructor(parent, existingValue, widthFactor = 2) {
+        super(parent, existingValue, widthFactor);
 
         var _this = this;
         this.Parent.Container.onclick = function () {
@@ -452,7 +454,7 @@ export class ZipCodeIntake extends IntakeBase {
         if (this.Parent.Options.Country) {
             switch (this.Parent.Options.Country) {
                 case 'USA':
-                    intakePart = new NumberIntakeInput(this, '     ', eventsToPrevent);
+                    intakePart = new NumberIntakeInput(this, '     ', eventsToPrevent, null, this.WidthFactor);
                     break;
                 case 'Canada':
                     intakePart = new TextIntakeInput(this, '      ', eventsToPrevent);
@@ -469,7 +471,7 @@ export class ZipCodeIntake extends IntakeBase {
                 repeatedPlaceholder = `${repeatedPlaceholder} `;
 
             if (this.Parent.Options.IsNumeric)
-                intakePart = new NumberIntakeInput(this, repeatedPlaceholder, eventsToPrevent);
+                intakePart = new NumberIntakeInput(this, repeatedPlaceholder, eventsToPrevent, null, this.WidthFactor);
             else
                 intakePart = new TextIntakeInput(this, repeatedPlaceholder, eventsToPrevent);
         }
@@ -498,13 +500,15 @@ export class IntakePartBase {
      * @param {Number} maxLength The Max Length for the Object's Value.
      * @param {String} elementType Type of element to create. I.E. Input, P, Button, ...
      */
-    constructor(parent, maxLength, elementType) {
+    constructor(parent, maxLength, elementType, widthFactor) {
 
         this.Parent = parent;
 
         this.MaxLength = maxLength;
 
         this.Element = document.createElement(elementType);
+
+        this.WidthFactor = widthFactor;
 
         this.UpdateWidth();
     }
@@ -519,8 +523,8 @@ export class IntakeInput extends IntakePartBase {
      * @param {String} type Optional. The type to set the input being create to. I.E. text, number, hidden. Text is default.
      * @param {Number} maxLength Optional. The maxlength for the input. If not provided maxlength will be determined by placeHolder.length. Also used to set width.
      */
-    constructor(parent, placeHolder, eventsToPrevent, type = 'text', maxLength = null) {
-        super(parent, maxLength ? maxLength : placeHolder.length, 'input');
+    constructor(parent, placeHolder, eventsToPrevent, type = 'text', maxLength = null, widthFactor) {
+        super(parent, maxLength ? maxLength : placeHolder.length, 'input', widthFactor);
 
         this.PlaceHolder = placeHolder;
 
@@ -537,9 +541,9 @@ export class IntakeInput extends IntakePartBase {
 
     UpdateWidth() {
         if (!this.Element.value || this.Element.value == '')
-            this.Element.style.width = ((this.MaxLength + 2) * 7.7) + 'px';
+            this.Element.style.width = ((this.MaxLength + this.WidthFactor) * 7.7) + 'px';
         else
-            this.Element.style.width = ((this.Element.value.length + 1) * 7.7) + 'px';
+            this.Element.style.width = ((this.Element.value.length + (this.WidthFactor - 1)) * 7.7) + 'px';
     }
 
     UpdateTextAlignment() {
@@ -709,8 +713,8 @@ export class NumberIntakeInput extends IntakeInput {
      * @param {String} placeHolder The text to set the PlaceHolder of the created input to.
      * @param {Array<string>} eventsToPrevent A string array of event names that will be have event listeners added to prevent default behavior.
      */
-    constructor(parent, placeHolder, eventsToPrevent, value = null) {
-        super(parent, placeHolder, eventsToPrevent, 'number', null);
+    constructor(parent, placeHolder, eventsToPrevent, value = null, widthFactor = 2) {
+        super(parent, placeHolder, eventsToPrevent, 'number', null, widthFactor);
 
         this.Element.min = 0;
         this.Element.pattern = '[0-9]*'
@@ -814,8 +818,8 @@ export class TextIntakeInput extends IntakeInput {
      * @param {String} placeHolder The text to set the PlaceHolder of the created input to.
      * @param {Array<string>} eventsToPrevent A string array of event names that will be have event listeners added to prevent default behavior.
      */
-    constructor(parent, placeHolder, eventsToPrevent) {
-        super(parent, placeHolder, eventsToPrevent, 'text', null);
+    constructor(parent, placeHolder, eventsToPrevent, widthFactor = 2) {
+        super(parent, placeHolder, eventsToPrevent, 'text', null, widthFactor);
     }
 
     KeyDown(event) {
@@ -902,7 +906,7 @@ export class IntakeDivider extends IntakePartBase {
      * @param {String} text The text to display in the divider's 'p' tag.
      */
     constructor(parent, text) {
-        super(parent, text.length, 'p');
+        super(parent, text.length, 'p', null);
 
         this.Element.className = 'Intake-Part';
         this.Element.innerText = text;
