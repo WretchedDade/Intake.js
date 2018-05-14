@@ -5,7 +5,7 @@
  */
 
 export class Intake {
-    constructor(container: String | HTMLElement, form: String | HTMLElement, existingValue: any, hiddenInput: String | HTMLElement, options: DateIntakeOptions | PhoneIntakeOptions | ZipCodeIntakeOptions, callback: Function);
+    constructor(container: String | HTMLElement, form: String | HTMLElement, existingValue: any, hiddenInput: String | HTMLElement, options: DateIntakeOptions | PhoneIntakeOptions | ZipCodeIntakeOptions, callback: Function, widthFactor: Number);
 
     Form: HTMLElement;
     Callback: Function;
