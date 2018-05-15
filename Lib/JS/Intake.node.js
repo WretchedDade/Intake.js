@@ -1,6 +1,7 @@
 /**
  * Author: Dade Cook
- * Codepen Demo: https://codepen.io/WretchedDade/pen/aYxXZb
+ * Last Updated: May 15th,
+ * Documentation: https://wretcheddade.github.io/Intake.js/
  * GitHub Repository: https://github.com/WretchedDade/Intake.js
  */
 
@@ -63,7 +64,6 @@ export class Intake {
             this.Container.removeChild(this.Container.firstChild);
         }
     }
-
 }
 
 export class DateIntakeOptions {
