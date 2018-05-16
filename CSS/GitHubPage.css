@@ -125,21 +125,21 @@ body {
 
 @keyframes Examples{
     0%{
-        bottom: 115px;
+        bottom: 165px;
     }50%{
-        bottom: 135px;
+        bottom: 185px;
     }100%{
-        bottom: 115px;
+        bottom: 165px;
     }
 }
 
 @keyframes ArrowDown{
     0%{
-        bottom: 60px;
+        bottom: 110px;
     }50%{
-        bottom: 80px;
+        bottom: 130px;
     }100%{
-        bottom: 60px;
+        bottom: 110px;
     }
 }
 
