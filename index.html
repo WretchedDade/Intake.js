@@ -63,9 +63,11 @@
 
             <div id="Custom-DateOfBirth"></div>
             <div class="CodeAndDesc">
-                <p>To create a date of birth create an Intake object and pass a DateIntakeOptions object as the 5th parameter.
-                    The DateIntakeOptions is creating with a format and the delimiter used in that format. This enables you
-                    to use any format: MM/DD/YYYY, YYYY-DD-MM, MM/YYYY, Etc.</p>
+                <p>
+                    To create a date of birth input, create an Intake object and pass a DateIntakeOptions object as the 5th parameter. When constructing
+                    the DateIntakeOptions pass a date format and the delimiter seperating the date parts. This lets you to
+                    use any format like: mm/dd/yyyy, yyyy-dd-mm, mm/yy, etc.
+                </p>
 
                 <pre><code>                    
     var DateOfBirth = new Intake(
@@ -74,8 +76,7 @@
             'Existing Value', 
             'Hidden Input', 
             new DateIntakeOptions('MM/DD/YYYY','/') 
-    );   
-                </code></pre>
+    );</code></pre>
             </div>
         </div>
 
@@ -86,19 +87,20 @@
 
             <div id="Custom-Phone"></div>
             <div class="CodeAndDesc">
-                <p></p>
+                <p>
+                    To create a phone input, create an Intake object and pass a PhoneIntakeOptions object as the 5th parameter. When constructing
+                    the PhoneIntakeOptions pass the format that you would like to use. Currently the only supported formats
+                    are: '(XXX)XXX-XXXX' and 'XXX-XXX-XXXX'.
+                </p>
 
-                <pre>
-                    <code>                    
+                <pre><code>
     var phone = new Intake(
             'Container Selector', 
             'Form Selector', 
             'Existing Value', 
             'Hidden Input', 
             new PhoneIntakeOptions('(XXX)XXX-XXXX')
-    );
-                    </code>
-                </pre>
+    );</code></pre>
             </div>
         </div>
 
@@ -110,19 +112,20 @@
 
             <div id="Custom-USPostalCode"></div>
             <div class="CodeAndDesc">
-                <p></p>
+                <p>
+                    To create a postal code input, create an Intake object and pass a ZipCodeIntakeOptions object as the 5th parameter. When
+                    constructing the ZipCodeIntakeOptions pass the country whose postal code you are accepting. Currently
+                    the only supported countries are : 'USA' and 'Canada'.
+                </p>
 
-                <pre>
-                <code> 
+                <pre><code> 
     var postalCode = new Intake(
             'Container Selector', 
             'Form Selector', 
             'Existing Value', 
             'Hidden Input', 
             new ZipCodeIntakeOptions('USA')
-    );
-                </code>
-            </pre>
+    );</code></pre>
             </div>
         </div>
         <div class="Option">
@@ -132,19 +135,20 @@
 
             <div id="Custom-CanadaPostalCode"></div>
             <div class="CodeAndDesc">
-                <p></p>
+                <p>
+                    To create a postal code input, create an Intake object and pass a ZipCodeIntakeOptions object as the 5th parameter. When
+                    constructing the ZipCodeIntakeOptions pass the country whose postal code you are accepting. Currently
+                    the only supported countries are : 'USA' and 'Canada'.
+                </p>
 
-                <pre>
-                <code> 
+                <pre><code> 
     var postalCode = new Intake(
             'Container Selector', 
             'Form Selector', 
             'Existing Value', 
             'Hidden Input', 
             new ZipCodeIntakeOptions('Canada')
-    );
-                </code>
-            </pre>
+    );</code></pre>
             </div>
         </div>
     </div>
@@ -158,7 +162,8 @@
         dateOfBirth = new Intake('#Custom-DateOfBirth', 'form', '', '#DateOfBirth', new DateIntakeOptions(
             'MM/DD/YYYY', '/'), null, 2);
 
-        phone = new Intake('#Custom-Phone', 'form', '', '#Phone', new PhoneIntakeOptions('(XXX)XXX-XXXX'), null, 2);
+        phone = new Intake('#Custom-Phone', 'form', '', '#Phone', new PhoneIntakeOptions('(XXX)XXX-XXXX'), null,
+            2);
 
         usPostalCode = new Intake('#Custom-USPostalCode', 'form', '', '#USPostalCode', new ZipCodeIntakeOptions(
             'USA'), null, 2);
